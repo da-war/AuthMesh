@@ -1,0 +1,24 @@
+{
+  "name": "authmesh",
+  "version": "1.0.0",
+  "description": "a express project for auth",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/da-war/AuthMesh.git"
+  },
+  "author": "Rana Dawar Abdullah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/da-war/AuthMesh/issues"
+  },
+  "homepage": "https://github.com/da-war/AuthMesh#readme",
+  "dependencies": {
+    "expressjs": "^1.0.1",
+    "joi": "^17.13.3",
+    "mongoose": "^8.6.3"
+  }
+}
