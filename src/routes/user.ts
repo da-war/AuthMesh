@@ -1,11 +1,13 @@
-import express from 'express';
+import { Router } from 'express';
+import { createUser, getUsers, loginUser } from '../../src/controllers/user';
 
-const app=express();
+const router = Router();
 
-const router=express.Router();
+router.post('/sign-up', createUser);
+router.get('/', getUsers);
+router.get('/:id', getUsers);
+router.post('/login', loginUser); // Add login route
 
+// Other CRUD routes can be added here
 
-router.get('/', (req, res) => {
-    res.send('Hello, World!');
-})
-
+export default router;

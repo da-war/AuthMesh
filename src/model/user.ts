@@ -1,58 +1,61 @@
+import mongoose, { Document, Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
 import Joi from 'joi';
-import mongoose from 'mongoose';
 
-interface User {
-    name:string,
-    email:string,
-    password:string
+// Define an interface for the User document
+interface IUser extends Document {
+    name: string;
+    email: string;
+    password: string;
+    generateHash(password: string): Promise<string>;
+    validatePassword(password: string): Promise<boolean>;
 }
 
-// Constants for validation rules
-const NAME_MIN_LENGTH = 5;
-const NAME_MAX_LENGTH = 50;
-const EMAIL_MIN_LENGTH = 5;
-const EMAIL_MAX_LENGTH = 255;
-const PASSWORD_MIN_LENGTH = 5;
-const PASSWORD_MAX_LENGTH = 255;
-
-// Define User schema
-const userSchema = new mongoose.Schema({
+// Create the User schema
+const userSchema: Schema<IUser> = new Schema({
     name: {
         type: String,
         required: true,
-        minlength: NAME_MIN_LENGTH,
-        maxlength: NAME_MAX_LENGTH,
+        minlength: 5,
+        maxlength: 50,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        minlength: EMAIL_MIN_LENGTH,
-        maxlength: EMAIL_MAX_LENGTH,
+        minlength: 5,
+        maxlength: 255,
     },
     password: {
         type: String,
         required: true,
-        minlength: PASSWORD_MIN_LENGTH,
-        maxlength: PASSWORD_MAX_LENGTH,
+        minlength: 5,
+        maxlength: 255,
     }
-}, {
-    timestamps: true // Automatically adds createdAt and updatedAt
 });
 
-// Create User model
-const User = mongoose.model('User', userSchema);
+// Method to hash password
+userSchema.methods.generateHash = async function(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+};
 
-// Validation function using Joi
-const validateUser = (user:User) => {
+// Method to validate password
+userSchema.methods.validatePassword = async function(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.password);
+};
+
+// Validation schema for user
+const validateUser = (user: any) => {
     const schema = Joi.object({
-        name: Joi.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
-        email: Joi.string().email().min(EMAIL_MIN_LENGTH).max(EMAIL_MAX_LENGTH).required(),
-        password: Joi.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH).required(),
+        name: Joi.string().required().min(5).max(50),
+        email: Joi.string().required().email().min(5).max(255),
+        password: Joi.string().required().min(5).max(255),
     });
 
     return schema.validate(user);
 };
 
-// Exporting model and validation function
+// Create and export the User model and validateUser function
+const User = mongoose.model<IUser>('User', userSchema);
 export { User, validateUser };
