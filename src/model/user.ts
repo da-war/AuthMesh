@@ -9,6 +9,7 @@ export interface IUser extends Document {
     password: string;
     generateHash(password: string): Promise<string>;
     validatePassword(password: string): Promise<boolean>;
+    _id:string;
 }
 
 // Create the User schema

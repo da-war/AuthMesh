@@ -87,7 +87,13 @@ export const loginUser = async (req: Request, res: Response) => {
         
         
 
-        res.send(user); // Optionally, exclude password
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+        const userId= user._id;
+        const name=user.name;
+        const email=user.email;
+
+        res.send({ accessToken, refreshToken, userId, name, email });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');

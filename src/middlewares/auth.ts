@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-import { User } from 'src/model/user';
-import { sendErrorRes, sendResponse } from 'src/utils/helper';
+import { User } from '../../src/model/user';
+import { sendErrorRes, sendResponse } from '../../src/utils/helper';
 
 
 declare global {
@@ -33,7 +33,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
 
 
             req.user = {
-                id: user._id,
+                id: user._id.toString(),
                 name: user.name,
                 email: user.email,
             };
