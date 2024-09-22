@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"   # Expose the app port
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - DB_URI=mongodb://mongo:27017/authmesh  # MongoDB URI for Docker
+    depends_on:
+      - mongo          # Ensures MongoDB service starts before the app
+    volumes:
+      - .:/usr/src/app
+    command: yarn start   # Start your app with Yarn
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"     # Expose MongoDB port
+    volumes:
+      - ./data/db:/data/db  # Persist MongoDB data on host machine

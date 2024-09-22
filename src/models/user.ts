@@ -10,6 +10,7 @@ export interface IUser extends Document {
     generateHash(password: string): Promise<string>;
     validatePassword(password: string): Promise<boolean>;
     _id:string;
+    isAdmin: boolean;
 }
 
 // Create the User schema
@@ -32,7 +33,11 @@ const userSchema: Schema<IUser> = new Schema({
         required: true,
         minlength: 5,
         maxlength: 255,
-    }
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false, // Default user is not an admin
+    },
 },
 {
     timestamps: true,
