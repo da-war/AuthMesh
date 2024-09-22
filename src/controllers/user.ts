@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IUser, User, validateUser } from '../model/user'; // Adjust the path as necessary
+import { IUser, User, validateUser } from '../models/user'; // Adjust the path as necessary
 
 import jwt from 'jsonwebtoken';
 

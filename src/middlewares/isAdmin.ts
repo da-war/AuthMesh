@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendErrorRes } from '../../src/utils/helper';
-import User from '../../src/model/user';
+import { User } from 'src/models/user';
 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {

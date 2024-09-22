@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-import { User } from '../../src/model/user';
+import { User } from '../models/user';
 import { sendErrorRes, sendResponse } from '../../src/utils/helper';
 
 
