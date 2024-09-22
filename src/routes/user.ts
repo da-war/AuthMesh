@@ -6,7 +6,7 @@ const router = Router();
 router.post('/sign-up', createUser);
 router.get('/', getUsers);
 router.get('/:id', getUsers);
-router.post('/login', loginUser); // Add login route
+router.post('/sign-in', loginUser); // Add login route
 
 // Other CRUD routes can be added here
 

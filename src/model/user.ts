@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import Joi from 'joi';
 
 // Define an interface for the User document
-interface IUser extends Document {
+export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
@@ -32,7 +32,11 @@ const userSchema: Schema<IUser> = new Schema({
         minlength: 5,
         maxlength: 255,
     }
-});
+},
+{
+    timestamps: true,
+}
+);
 
 // Method to hash password
 userSchema.methods.generateHash = async function(password: string): Promise<string> {
@@ -45,7 +49,7 @@ userSchema.methods.validatePassword = async function(password: string): Promise<
     return bcrypt.compare(password, this.password);
 };
 
-// Validation schema for user
+// Validation schema for user 
 const validateUser = (user: any) => {
     const schema = Joi.object({
         name: Joi.string().required().min(5).max(50),

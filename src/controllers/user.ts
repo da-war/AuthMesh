@@ -1,5 +1,23 @@
 import { Request, Response } from 'express';
-import { User, validateUser } from '../model/user'; // Adjust the path as necessary
+import { IUser, User, validateUser } from '../model/user'; // Adjust the path as necessary
+
+import jwt from 'jsonwebtoken';
+
+
+const JWT_ACCESS_SECRET = process.env.JWT_SECRET || 'somethingisfishygeneralsahab';
+const JWT_REFRESH_SECRET = process.env.JWT_SECRET || 'somethingisfishygeneralsahab';
+
+
+
+
+
+const generateAccessToken = (user: IUser) => {
+    return jwt.sign({ id: user._id }, JWT_ACCESS_SECRET, { expiresIn: "1h" });
+};
+
+const generateRefreshToken = (user: IUser) => {
+    return jwt.sign({ id: user._id }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+};
 
 // Create a new user
 export const createUser = async (req: Request, res: Response) => {
@@ -17,7 +35,16 @@ export const createUser = async (req: Request, res: Response) => {
         });
 
         await user.save();
-        res.send(user);
+
+        //gernerate access and refresh token
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+        const userId= user._id;
+        const name=user.name;
+        const email=user.email;
+
+        res.send({ accessToken, refreshToken, userId, name, email });
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -50,11 +77,15 @@ export const getUser = async (req: Request, res: Response) => {
 // Login user
 export const loginUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const user = await User.findOne({ email: req.body.email});
         if (!user) return res.status(400).send('Invalid email or password.');
 
         const validPassword = await user.validatePassword(req.body.password);
         if (!validPassword) return res.status(400).send('Invalid email or password.');
+        //exclude password from response
+
+        
+        
 
         res.send(user); // Optionally, exclude password
     } catch (err) {
